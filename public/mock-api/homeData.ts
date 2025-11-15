@@ -75,12 +75,13 @@ export const allGames: Game[] = [
 ]
 
 export const footerNavItems: any[] = [
-  {name: "Playfun", icon: House},
-  {name: "Gifcode", icon: Gift},
-  {name: "Nạp tiền", icon: Database},
-  {name: "Hỗ trợ", icon: Headset},
-  {name: "Tài khoản", icon: UserRound}
+  {name: "Playfun", icon: House, link: "/playfun"},
+  {name: "Gifcode", icon: Gift, link: "/gifcode"},
+  {name: "Nạp tiền", icon: Database, link: "/"},
+  {name: "Hỗ trợ", icon: Headset, link: "/ho-tro"},
+  {name: "Tài khoản", icon: UserRound, link: "/profile"}
 ];
+
 
 export const bannerImage = [
     {id: 1,

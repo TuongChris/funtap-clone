@@ -23,6 +23,19 @@ const HomePage = () => {
     setIsVisible(false);
   };
 
+  const getActiveRoute = (itemName: string): boolean => {
+    const routeMap: { [key: string]: string[] } = {
+      Playfun: ["/", "/playfun"],
+      Gifcode: ["/gifcode"],
+      "Nạp tiền": ["/nap-tien", "/payment"],
+      "Hỗ trợ": ["/ho-tro", "/support"],
+      "Tài khoản": ["/profile", "/tai-khoan"],
+    };
+
+    const routes = routeMap[itemName] || [];
+    return routes.includes(location.pathname);
+  };
+
   return (
     <div className="min-h-screen bg-gray-200 font-display text-gray-700 text-base font-normal relative">
       <header className="sticky top-0 left-0 z-40 w-full grid place-items-center">
@@ -45,12 +58,31 @@ const HomePage = () => {
           {isAuthenticated && user ? (
             <div className="flex flex-row items-center pr-[15px]! gap-[15px]">
               <button className="cursor-pointer">
-                <Bell size={20} color="#8E8E93" />
+                <Bell size={22} color="#8E8E93" />
               </button>
               <button className="cursor-pointer flex flex-row items-center gap-2">
                 <div className="flex flex-row items-center gap-[5px]">
-                  {user.loginType === "email" ? <p>G</p> : <p>F</p>}
-                  <p>{user.username}</p>
+                  {user.loginType === "email" ? (
+                    <p
+                      className="w-6 h-6 rounded-full bg-[#f8941e] text-white uppercase flex justify-center items-center"
+                      style={{ fontSize: 14 }}
+                    >
+                      G
+                    </p>
+                  ) : (
+                    <p>F</p>
+                  )}
+                  <p
+                    className="text-[#61616a]"
+                    style={{
+                      fontFamily: "Roboto, sans-serif",
+                      fontSize: 12,
+                      letterSpacing: 0.2,
+                      fontWeight: 400,
+                    }}
+                  >
+                    {user.username}
+                  </p>
                 </div>
                 <EllipsisVertical size={20} color="#8E8E93" />
               </button>
@@ -248,18 +280,35 @@ const HomePage = () => {
           )}
           {footerNavItems.map((item, index) => {
             const Icon = item.icon;
+            const isActive = getActiveRoute(item.name);
+
             return (
               <button
                 key={index}
                 className="no-underline w-1/5 m-0 p-0 flex flex-row justify-center items-center h-[58px] gap-1 text-[#8d8d8d] hover:text-[#ee4623]"
+                onClick={() => {
+                  const routeMap: { [key: string]: string } = {
+                    Playfun: "/playfun",
+                    Gifcode: "/gifcode",
+                    "Nạp tiền": "/",
+                    "Hỗ trợ": "/ho-tro",
+                    "Tài khoản": "/profile",
+                  };
+                  navigate(routeMap[item.name] || "/");
+                }}
               >
-                <Icon size={26} strokeWidth={1.5} className="text-inherit" />
+                <Icon
+                  size={26}
+                  strokeWidth={1.5}
+                  className="text-inherit"
+                  fill={isActive ? "#ee4623" : "none"}
+                />
                 <p
                   className="text-inherit"
                   style={{
                     fontFamily: "Roboto, sans-serif",
                     fontSize: 15,
-                    fontWeight: 400,
+                    fontWeight: isActive ? 600 : 400,
                   }}
                 >
                   {item.name}
