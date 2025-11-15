@@ -30,8 +30,12 @@ const LoginPage = () => {
     }
 
     try {
+      const randomId = Math.floor(
+        100000000 + Math.random() * 900000000
+      ).toString();
+
       const userData = {
-        id: new Date().toISOString(),
+        id: randomId,
         username: username,
         loginType: "email" as const,
         loginTime: new Date().toISOString(),

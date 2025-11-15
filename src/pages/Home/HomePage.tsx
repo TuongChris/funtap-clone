@@ -1,321 +1,543 @@
-import { BannerCarousel } from "@/components/BannerCarousel";
-import { SheetHomePage } from "@/components/SheetHomePage";
-import { UserGamesCarousel } from "@components/GameCarousel";
-import { Bell, CircleX, EllipsisVertical, Search } from "lucide-react";
-import logo from "../../../public/images/logo/logo-funtap.png";
-import {
-  allGames,
-  footerNavItems,
-  quickAccessItems,
-} from "../../../public/mock-api/homeData";
-import payImg from "@assets/icons/9-Pay.svg";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { BannerCarousel } from "@/components/Carousel/BannerCarousel";
+import NewGameCarousel from "@/components/Carousel/NewGameCarousel";
+import SuggestCarousel from "@/components/Carousel/SuggestCarousel";
+import Header from "@/components/Header";
+import Navbar from "@/components/Navbar";
 import { useAuthStore } from "@/store/authStore";
+import background from "@assets/background/1755836841_95.png";
+import warnImg from "@assets/background/logo  18.png";
+import ggPlayImg from "@assets/background/Ứng dụng Playfun (1).png";
+import appStoreImg from "@assets/background/Ứng dụng Playfun.png";
+import logoImg from "@assets/logo/logo-funtap.png";
+import newGameImg1 from "@assets/newGamesImg/game.png";
+import newGameImg2 from "@assets/newGamesImg/game1.png";
+import newGameImg3 from "@assets/newGamesImg/game2.jpg";
+import newGameImg4 from "@assets/newGamesImg/game3.jpg";
+import newImg1 from "@assets/newImg/MOMO TẶNG 10K - CÙNG GAME THỦ CÀY RANK ĐUA TOP! (1).jpg";
+import newImg2 from "@assets/newImg/MOMO TẶNG 10K - CÙNG GAME THỦ CÀY RANK ĐUA TOP!.jpg";
+import newImg3 from "@assets/newImg/MOMO TẶNG BẠN CŨ 5K NẠP GAME!.jpg";
+import gameImg1 from "@assets/recomendImg/game1.jpg";
+import gameImg2 from "@assets/recomendImg/game2.png";
+import gameImg3 from "@assets/recomendImg/game3.png";
+import gameImg4 from "@assets/recomendImg/game4.png";
+import gameImg5 from "@assets/recomendImg/game5.png";
+import gameImg6 from "@assets/recomendImg/game6.png";
+import bangHoiImg from "@assets/serviceNav/Bang-hoi.png";
+import doiCodeImg from "@assets/serviceNav/Doi-code.png";
+import gameH5Img from "@assets/serviceNav/Game-H5.png";
+import hoTroImg from "@assets/serviceNav/Ho-tro.png";
+import napGameImg from "@assets/serviceNav/Nap-game.png";
+import nhanCodeImg from "@assets/serviceNav/Nhan-code.png";
+import sukienImg from "@assets/serviceNav/Su-kien.png";
+import { ChevronRight, SunMoon, Sword, Swords } from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import { footerNavItems } from "../../../public/mock-api/homeData";
 
-const HomePage = () => {
+interface ServiceItem {
+  name: string;
+  icon: string;
+}
+
+interface Game {
+  name: string;
+  image: string;
+  releaseDate?: string;
+  status?: string;
+}
+
+interface NewsItem {
+  title: string;
+  image: string;
+  author: string;
+  category: string;
+  date: string;
+  isEnded?: boolean;
+}
+
+interface CategoryItem {
+  icon: any;
+  name: string;
+}
+
+const services: ServiceItem[] = [
+  { name: "Nhận code", icon: nhanCodeImg },
+  { name: "Hỗ trợ", icon: hoTroImg },
+  { name: "Nạp game", icon: napGameImg },
+  { name: "Bang hội", icon: bangHoiImg },
+  { name: "Sự kiện", icon: sukienImg },
+  { name: "Game H5", icon: gameH5Img },
+  { name: "Đổi code", icon: doiCodeImg },
+];
+
+const newGames: Game[] = [
+  {
+    name: "3Q Nghịch Chuyển Thời Không",
+    image: newGameImg1,
+    releaseDate: "09/11/2025",
+  },
+  {
+    name: "Lữ Khách Đại Lục: Idle RPG",
+    image: newGameImg2,
+    releaseDate: "04/01/2025",
+  },
+  {
+    name: "3Q Nghịch Chuyển Thời Không",
+    image: newGameImg3,
+    releaseDate: "04/10/2025",
+  },
+  {
+    name: "Lữ Khách Đại Lục: Idle RPG",
+    image: newGameImg4,
+    releaseDate: "04/07/2024",
+  },
+];
+
+const recommendedGames: Game[] = [
+  {
+    name: "Call Of Dragon: Chúa Tể Của Rồng",
+    image: gameImg1,
+  },
+  {
+    name: "Phàm Nhân Tu Tiên: Duyên Khởi",
+    image: gameImg2,
+  },
+  {
+    name: "Đấu Phá Mobile",
+    image: gameImg3,
+  },
+  {
+    name: "Đại Hiệp Tap Tap",
+    image: gameImg4,
+  },
+  {
+    name: "Call Of Dragon: Chúa Tể Của Rồng",
+    image: gameImg5,
+  },
+  {
+    name: "Phàm Nhân Tu Tiên: Duyên Khởi",
+    image: gameImg6,
+  },
+];
+
+const categories: CategoryItem[] = [
+  {
+    icon: <Swords />,
+    name: "MMORPG",
+  },
+  {
+    icon: <SunMoon />,
+    name: "Tam Quốc",
+  },
+  {
+    icon: <Sword />,
+    name: "Kiếm Hiệp",
+  },
+  {
+    icon: <Swords />,
+    name: "MMORPG",
+  },
+  {
+    icon: <SunMoon />,
+    name: "Tam Quốc",
+  },
+  {
+    icon: <Sword />,
+    name: "Kiếm Hiệp",
+  },
+  {
+    icon: <Swords />,
+    name: "MMORPG",
+  },
+  {
+    icon: <SunMoon />,
+    name: "Tam Quốc",
+  },
+];
+
+const newsItems: NewsItem[] = [
+  {
+    title: "MOMO TẶNG BẠN CŨ 5K NẠP GAME!",
+    image: newImg1,
+    author: "Funtap",
+    category: "Tin tức",
+    date: "29/10/2025, 17:05",
+  },
+  {
+    title: "MOMO TẶNG BẠN CŨ 5K NẠP GAME!",
+    image: newImg2,
+    author: "Funtap",
+    category: "Tin tức",
+    date: "29/10/2025, 17:05",
+  },
+  {
+    title: "MOMO TẶNG BẠN CŨ 5K NẠP GAME!",
+    image: newImg3,
+    author: "Funtap",
+    category: "Tin tức",
+    date: "29/10/2025 - 06/11/2025",
+    isEnded: true,
+  },
+  {
+    title: "MOMO TẶNG BẠN CŨ 5K NẠP GAME!",
+    image: newImg1,
+    author: "Funtap",
+    category: "Tin tức",
+    date: "29/10/2025, 17:05",
+  },
+  {
+    title: "MOMO TẶNG BẠN CŨ 5K NẠP GAME!",
+    image: newImg2,
+    author: "Funtap",
+    category: "Tin tức",
+    date: "29/10/2025, 17:05",
+  },
+];
+
+const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuthStore();
-
-  const [isVisible, setIsVisible] = useState(true);
-
-  const handleClose = () => {
-    setIsVisible(false);
-  };
-
-  const getActiveRoute = (itemName: string): boolean => {
-    const routeMap: { [key: string]: string[] } = {
-      Playfun: ["/", "/playfun"],
-      Gifcode: ["/gifcode"],
-      "Nạp tiền": ["/nap-tien", "/payment"],
-      "Hỗ trợ": ["/ho-tro", "/support"],
-      "Tài khoản": ["/profile", "/tai-khoan"],
-    };
-
-    const routes = routeMap[itemName] || [];
-    return routes.includes(location.pathname);
-  };
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-200 font-display text-gray-700 text-base font-normal relative">
-      <header className="sticky top-0 left-0 z-40 w-full grid place-items-center">
-        <div className="w-full max-w-3xl flex justify-between items-center px-4 py-2 h-14 bg-white border-b! border-[#eeeeee]!">
-          <div className="flex flex-row items-center gap-1">
-            <SheetHomePage />
-
-            <img
-              src={logo}
-              alt="logo"
-              className="w-[140px] h-[41px]"
-              style={{
-                userSelect: "none",
-                WebkitUserSelect: "none",
-                MozUserSelect: "none",
-                msUserSelect: "none",
-              }}
-            />
-          </div>
-          {isAuthenticated && user ? (
-            <div className="flex flex-row items-center pr-[15px]! gap-[15px]">
-              <button className="cursor-pointer">
-                <Bell size={22} color="#8E8E93" />
-              </button>
-              <button className="cursor-pointer flex flex-row items-center gap-2">
-                <div className="flex flex-row items-center gap-[5px]">
-                  {user.loginType === "email" ? (
-                    <p
-                      className="w-6 h-6 rounded-full bg-[#f8941e] text-white uppercase flex justify-center items-center"
-                      style={{ fontSize: 14 }}
-                    >
-                      G
-                    </p>
-                  ) : (
-                    <p>F</p>
-                  )}
-                  <p
-                    className="text-[#61616a]"
-                    style={{
-                      fontFamily: "Roboto, sans-serif",
-                      fontSize: 12,
-                      letterSpacing: 0.2,
-                      fontWeight: 400,
-                    }}
-                  >
-                    {user.username}
-                  </p>
-                </div>
-                <EllipsisVertical size={20} color="#8E8E93" />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => navigate("/login")}
-              className="opacity-90 hover:opacity-100 px-3 py-2 bg-[#ff753a] flex justify-center items-center border-none outline-none cursor-pointer rounded max-h-8 mr-[15px] h-8"
-            >
-              <p
-                className="text-white leading-6"
-                style={{ fontFamily: "Roboto, sans-serif", fontSize: 13 }}
-              >
-                Đăng nhập
-              </p>
-            </button>
-          )}
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-200 font-roboto text-gray-700 text-base font-normal">
+      <Header
+        isAuthenticated={isAuthenticated}
+        user={user}
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        navigate={navigate}
+        logout={logout}
+      />
 
       <main className="w-full flex flex-col justify-center items-center gap-0">
         <div className="w-full max-w-3xl">
           <BannerCarousel />
-
-          <div className="flex flex-row justify-center items-center bg-white">
-            <div className="flex flex-row justify-center items-center bg-white">
-              {quickAccessItems.map((item, index) => (
-                <button
-                  key={index}
-                  className="flex flex-col w-[110px] justify-center items-center my-[15px] mt-5 gap-1 text-[#222222] hover:text-[#ee4623] cursor-pointer"
+        </div>
+        <div className="w-full max-w-3xl bg-white relative">
+          <div className="w-full flex flex-col justify-center items-center">
+            <img
+              src={background}
+              alt="background"
+              className="w-[728px] h-[939px] object-cover mt-2!"
+            />
+          </div>
+          <div className="w-full flex flex-col justify-center items-center mb-7!">
+            <div className=" w-full max-w-[728px] absolute z-20 top-0 pt-15!">
+              <div className="px-6! flex flex-col mb-7!">
+                <h2
+                  className="text-[#1f1f1f] mb-5!"
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 600,
+                    fontFamily: "Roboto, sans-serif",
+                  }}
                 >
-                  <img
-                    src={item.icon}
-                    alt={item.name}
-                    className="w-[50px] h-[58px] mb-0.5!"
-                  />
-                  <p
-                    className="text-inherit"
-                    style={{ fontFamily: "Roboto, sans-serif", fontSize: 14 }}
+                  Dịch vụ
+                </h2>
+                <div className="flex flex-row justify-between px-2!">
+                  {services.map((service, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col items-center gap-2"
+                    >
+                      <div className="w-12.5 h-12.5 flex items-center justify-center text-white text-lg">
+                        <img src={service.icon} alt="service-img" />
+                      </div>
+                      <span
+                        className="text-[#1f1f1f] font-roboto text-center"
+                        style={{
+                          fontSize: 13.5,
+                          fontWeight: 400,
+                          fontFamily: "Roboto, sans-serif",
+                        }}
+                      >
+                        {service.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="pl-6! mb-14!">
+                <h2
+                  className="text-[#1f1f1f] mb-3.5!"
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 600,
+                    fontFamily: "Roboto, sans-serif",
+                  }}
+                >
+                  Game mới
+                </h2>
+                <NewGameCarousel newGames={newGames} />
+              </div>
+              <div className="pl-6! flex flex-col">
+                <div className="flex justify-between items-center px-6 mb-5">
+                  <h2
+                    className="text-[#1f1f1f] mb-5!"
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 600,
+                      fontFamily: "Roboto, sans-serif",
+                    }}
                   >
-                    {item.name}
-                  </p>
-                </button>
-              ))}
+                    Gợi ý cho bạn
+                  </h2>
+                  <button className="flex flex-row items-center gap-1">
+                    <p
+                      className="text-[#ee4623]"
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 400,
+                        fontFamily: "Roboto, sans-serif",
+                      }}
+                    >
+                      Tất cả
+                    </p>
+                    <ChevronRight color="#ee4623" strokeWidth={1} size={20} />
+                  </button>
+                </div>
+
+                <SuggestCarousel recommendedGames={recommendedGames} />
+
+                <div className="grid grid-cols-4 grid-rows-2 gap-3 rounded-lg pr-6!">
+                  {categories.map((category, index) => (
+                    <a
+                      key={index}
+                      href="#"
+                      className="bg-[#F3F3F3] text-[#1f1f1f] rounded-lg flex items-center justify-center py-2! px-4 gap-2.5 hover:text-[#EF4B2A] transition-colors"
+                    >
+                      <span className="text-[#1f1f1f]" style={{ fontSize: 20 }}>
+                        {category.icon}
+                      </span>
+                      <span
+                        className=""
+                        style={{
+                          fontSize: 14,
+                          fontFamily: "Roboto, sans-serif",
+                          fontWeight: 400,
+                        }}
+                      >
+                        {category.name}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div className="h-2 bg-gray-100" />
-
-          <UserGamesCarousel />
-
-          <div className="h-2 bg-gray-100" />
-
-          <div className="flex flex-col bg-white relative">
-            <div className="px-[15px]! border-b! border-[#f2f2f2]! min-h-[55.29px] flex flex-row justify-between items-center">
-              <h3
-                className="leading-6 text-gray-700"
+        <div className="w-full max-w-3xl bg-white px-6!">
+          <div className="flex flex-col">
+            <div className="flex justify-between items-center mb-0.5!">
+              <h2
+                className="text-[#1f1f1f]"
                 style={{
+                  fontSize: 20,
+                  fontWeight: 600,
                   fontFamily: "Roboto, sans-serif",
-                  fontSize: 17,
-                  fontWeight: 700,
                 }}
               >
-                Danh sách game
-              </h3>
-              <div className="flex flex-row relative">
-                <input
-                  type="text"
-                  placeholder="Tìm game"
-                  className="w-52 h-8 border border-gray-100 bg-gray-100 px-2 pr-10 text-sm outline-0 rounded-full transition-all duration-300 box-border"
-                />
-                <button className="h-8 w-10 border-none outline-none flex justify-center items-center bg-transparent absolute right-0">
-                  <Search size={20} strokeWidth={1.5} />
-                </button>
-              </div>
+                Tin tức - Sự kiện
+              </h2>
+              <button className="flex flex-row items-center gap-1">
+                <p
+                  className="text-[#ee4623]"
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 400,
+                    fontFamily: "Roboto, sans-serif",
+                  }}
+                >
+                  Xem tất cả
+                </p>
+                <ChevronRight color="#ee4623" strokeWidth={1} size={20} />
+              </button>
             </div>
 
-            <div className="w-full box-border">
-              <div className="game-grid">
-                <ul className="grid grid-cols-4 list-none p-0 m-0">
-                  {allGames.map((game, index) => {
-                    const isLastInRow = (index + 1) % 4 === 0;
-                    const itemClass = `
-                      text-center transition-all duration-200
-                      ${!isLastInRow ? "border-r! border-[#f4f4f4]!" : ""}
-                      border-b! border-[#f4f4f4]!
-                      hover:-translate-y-1 hover:shadow-md hover:bg-gray-50!
-                    `;
-                    return (
-                      <li key={index} className={itemClass}>
-                        <a
-                          href="#"
-                          className="block no-underline text-gray-800"
+            <div className="flex flex-col px-6">
+              {newsItems.map((news, index) => (
+                <div
+                  key={index}
+                  className="flex py-3! gap-5 border-b! border-gray-200! last:border-b-0!"
+                >
+                  <img
+                    src={news.image}
+                    alt="img"
+                    className="w-[235px] h-[135px] rounded-[8px] object-cover"
+                  />
+                  <div className="flex flex-col justify-start items-start gap-2 flex-1">
+                    <h3
+                      className="text-[#1f1f1f]"
+                      style={{
+                        fontSize: 15.75,
+                        fontWeight: 400,
+                        fontFamily: "Roboto, sans-serif",
+                      }}
+                    >
+                      {news.title}
+                    </h3>
+                    <div className="flex items-center gap-1 mb-1">
+                      <div className="w-5 h-5 bg-black rounded-full flex items-center justify-center text-white text-xs">
+                        A
+                      </div>
+                      <h6
+                        className="text-[#61616a]"
+                        style={{
+                          fontSize: 13.5,
+                          fontWeight: 400,
+                          fontFamily: "Roboto, sans-serif",
+                        }}
+                      >
+                        {news.author}
+                      </h6>
+                    </div>
+                    <p
+                      className="text-gray-500"
+                      style={{
+                        fontSize: 13.5,
+                        fontWeight: 400,
+                        fontFamily: "Roboto, sans-serif",
+                      }}
+                    >
+                      <span className="text-[#1d73f1] mr-1!">
+                        {news.category}
+                      </span>{" "}
+                      | <span className="ml-1!">{news.date}</span>
+                      {news.isEnded && (
+                        <strong
+                          className="text-[#515151]"
+                          style={{
+                            fontSize: 13.5,
+                            fontFamily: "Roboto, sans-serif",
+                            marginLeft: 8,
+                          }}
                         >
-                          <div className="flex flex-col justify-center items-center py-[18px]! gap-2.5">
-                            <img
-                              src={game.image}
-                              alt={game.name}
-                              className="w-30 h-30 rounded-lg mx-auto"
-                            />
-                            <p
-                              className="m-0 mt-3 px-2.5! truncate max-w-[191px]"
-                              style={{
-                                fontSize: 14,
-                                fontFamily: "Roboto, sans-serif",
-                              }}
-                            >
-                              {game.name}
-                            </p>
-                          </div>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+                          Đã kết thúc
+                        </strong>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </main>
 
       <div className="flex flex-col justify-center items-center w-full">
-        <div className="bg-gray-100 w-full max-w-3xl flex flex-col justify-center items-center px-[15px]! pt-10! pb-4!">
+        <div className="bg-gray-100 w-full max-w-3xl flex flex-col justify-center items-center px-[15px]! pt-6! pb-4!">
           <div className="pt-8 pb-5 flex flex-col justify-center items-center text-center">
-            <img
-              src={logo}
-              alt="logo"
-              style={{ width: 148, height: 46, marginBottom: 35 }}
-            />
+            <div className="flex flex-row items-center gap-3 mb-5!">
+              <img src={logoImg} alt="logoImg" className="w-[118px] h-10" />
+              <img src={warnImg} alt="warnImg" className="w-[137px] h-[70px]" />
+            </div>
+
+            <div className="flex flex-col items-center space-y-1 mb-3! gap-1.5">
+              <p
+                className="text-[#61616a]"
+                style={{
+                  fontFamily: "Roboto, sans-serif",
+                  fontSize: 14,
+                  fontWeight: 400,
+                }}
+              >
+                Email: <strong>hotro@funtap.vn</strong> | Hotline:{" "}
+                <strong>1900 636 452</strong>
+              </p>
+              <p
+                className="text-[#61616a]"
+                style={{
+                  fontFamily: "Roboto, sans-serif",
+                  fontSize: 14,
+                  fontWeight: 400,
+                }}
+              >
+                Funtap security: <strong>Infosec@funtap.vn</strong>
+              </p>
+              <p
+                className="text-[#61616a]"
+                style={{
+                  fontFamily: "Roboto, sans-serif",
+                  fontSize: 14,
+                  fontWeight: 400,
+                }}
+              >
+                Người chịu trách nhiệm nội dung:{" "}
+                <strong>Ông Đào Quang Tuấn</strong>
+              </p>
+              <p
+                className="text-[#61616a] max-w-[560px]"
+                style={{
+                  fontFamily: "Roboto, sans-serif",
+                  fontSize: 14,
+                  fontWeight: 400,
+                }}
+              >
+                Giấy phép cung cấp dịch vụ trò chơi điện tử G1 trên mạng do Cục
+                Phát Thanh, Truyền Hình và Thông tin Điện tử cấp ngày 25 tháng 4
+                năm 2025
+              </p>
+              <p
+                className="text-[#61616a] max-w-[450px]"
+                style={{
+                  fontFamily: "Roboto, sans-serif",
+                  fontSize: 14,
+                  fontWeight: 400,
+                }}
+              >
+                Giấy chứng nhận đăng ký cung cấp dịch vụ trò chơi điện tử trên
+                mạng số 125/GCN-PTTH&TTĐT ngày 16 tháng 7 năm 2020
+              </p>
+            </div>
+
+            <div className="mb-4!">
+              <p
+                className="text-[#1f1f1f] uppercase mb-2!"
+                style={{
+                  fontFamily: "Roboto, sans-serif",
+                  fontSize: 14,
+                  fontWeight: 600,
+                }}
+              >
+                Tải ứng dụng Playfun tại
+              </p>
+              <div className="flex gap-3 justify-center">
+                <button className="cursor-pointer">
+                  <img
+                    src={ggPlayImg}
+                    alt="ggPlayImg"
+                    className="w-[126px] h-9"
+                  />
+                </button>
+                <button className="cursor-pointer">
+                  <img
+                    src={appStoreImg}
+                    alt="appStoreImg"
+                    className="w-[126px] h-9"
+                  />
+                </button>
+              </div>
+            </div>
+
             <p
-              className="m-0 mb-2 font-normal leading-6"
-              style={{ fontSize: 12, color: "#61616A", fontWeight: 400 }}
-            >
-              Email:{" "}
-              <span className="text-orange-600 underline">hotro@funtap.vn</span>
-            </p>
-            <p
-              className="m-0 mb-2 text-xs text-gray-600 font-normal leading-6"
-              style={{ fontSize: 12, color: "#61616A", fontWeight: 400 }}
-            >
-              Funtap security:{" "}
-              <span className="text-orange-600 underline">
-                Infosec@funtap.vn
-              </span>
-            </p>
-            <p
-              className="m-0 mb-2 text-xs text-gray-600 font-normal leading-6"
-              style={{ fontSize: 12, color: "#61616A", fontWeight: 400 }}
-            >
-              Người chịu trách nhiệm nội dung: <b>Ông Đào Quang Tuấn</b>
-            </p>
-            <p
-              className="m-0 mb-1! text-xs text-gray-600 font-normal leading-5  max-w-[350px]"
-              style={{ fontSize: 12, color: "#61616A", fontWeight: 400 }}
-            >
-              Giấy phép cung cấp dịch vụ trò chơi điện tử G1 trên mạng số
-              201/GP-BTTTT ngày 14 tháng 05 năm 2018.
-            </p>
-            <p
-              className="m-0 mb-2 text-xs text-gray-600 font-normal leading-5  max-w-[400px]"
-              style={{ fontSize: 12, color: "#61616A", fontWeight: 400 }}
-            >
-              Giấy chứng nhận đăng ký cung cấp dịch vụ trò chơi điện tử trên
-              mạng số 125/GCN-PTTH&TTĐT ngày 16 tháng 7 năm 2020.
-            </p>
-            <p
-              className="m-0 mb-2 text-xs text-gray-600 font-normal leading-6"
-              style={{ fontSize: 12, color: "#61616A", fontWeight: 400 }}
+              className="text-[#8e8e93]"
+              style={{
+                fontFamily: "Roboto, sans-serif",
+                fontSize: 14,
+                fontWeight: 400,
+              }}
             >
               Copyright © 2019 Funtap.
             </p>
           </div>
         </div>
       </div>
+
       <div className="w-full flex justify-center items-center sticky bottom-0 left-0 z-40">
         <div className="w-full max-w-3xl flex flex-row justify-center items-center bg-white border-t! border-[#dadada]! relative">
-          {isVisible && (
-            <div
-              className="absolute right-10 bottom-22 z-50"
-              style={{
-                userSelect: "none",
-                WebkitUserSelect: "none",
-                MozUserSelect: "none",
-                msUserSelect: "none",
-              }}
-            >
-              <button
-                style={{ position: "absolute", right: -15, top: -15 }}
-                onClick={handleClose}
-              >
-                <CircleX size={20} />
-              </button>
-              <img src={payImg} alt="9pay" />
-            </div>
-          )}
-          {footerNavItems.map((item, index) => {
-            const Icon = item.icon;
-            const isActive = getActiveRoute(item.name);
-
-            return (
-              <button
-                key={index}
-                className="no-underline w-1/5 m-0 p-0 flex flex-row justify-center items-center h-[58px] gap-1 text-[#8d8d8d] hover:text-[#ee4623]"
-                onClick={() => {
-                  const routeMap: { [key: string]: string } = {
-                    Playfun: "/playfun",
-                    Gifcode: "/gifcode",
-                    "Nạp tiền": "/",
-                    "Hỗ trợ": "/ho-tro",
-                    "Tài khoản": "/profile",
-                  };
-                  navigate(routeMap[item.name] || "/");
-                }}
-              >
-                <Icon
-                  size={26}
-                  strokeWidth={1.5}
-                  className="text-inherit"
-                  fill={isActive ? "#ee4623" : "none"}
-                />
-                <p
-                  className="text-inherit"
-                  style={{
-                    fontFamily: "Roboto, sans-serif",
-                    fontSize: 15,
-                    fontWeight: isActive ? 600 : 400,
-                  }}
-                >
-                  {item.name}
-                </p>
-              </button>
-            );
-          })}
+          <Navbar footerNavItems={footerNavItems} navigate={navigate} />
         </div>
       </div>
     </div>
