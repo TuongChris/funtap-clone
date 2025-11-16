@@ -1,9 +1,9 @@
-import { BannerCarousel } from "@/components/Carousel/BannerCarousel";
+import { BannerCarousel } from "@/components/Carousels/BannerCarousel";
+import { UserGamesCarousel } from "@/components/Carousels/GameCarousel";
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import { useAuthStore } from "@/store/authStore";
 import payImg from "@assets/icons/9-Pay.svg";
-import { UserGamesCarousel } from "@components/Carousel/GameCarousel";
 import { CircleX, Search } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -17,7 +17,6 @@ import logo from "../../assets/logo/logo-funtap.png";
 const PaymentPage = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuthStore();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [isVisible, setIsVisible] = useState(true);
 
@@ -30,8 +29,6 @@ const PaymentPage = () => {
       <Header
         isAuthenticated={isAuthenticated}
         user={user}
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
         navigate={navigate}
         logout={logout}
       />

@@ -3,10 +3,10 @@ import logo from "../assets/logo/logo-funtap.png";
 import { SheetHomePage } from "./SheetHomePage";
 
 const HeaderComponent = ({
+  navigate,
   isAuthenticated,
   user,
   setIsDialogOpen,
-  navigate,
 }) => {
   return (
     <header className="sticky top-0 left-0 z-40 w-full grid place-items-center">

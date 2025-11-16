@@ -1,14 +1,11 @@
-import DialogUser from "./DialogUser";
+import { useState } from "react";
+import DialogUser from "./Dialogs/DialogUser";
 import HeaderComponent from "./HeaderComponent";
+import DropdownNotification from "./Dropdowns/DropdownNotification";
 
-const Header = ({
-  isAuthenticated,
-  user,
-  setIsDialogOpen,
-  navigate,
-  isDialogOpen,
-  logout,
-}) => {
+const Header = ({ isAuthenticated, user, navigate, logout }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   return (
     <>
       <HeaderComponent
@@ -25,6 +22,7 @@ const Header = ({
           logout={logout}
         />
       )}
+      {isAuthenticated && user && <DropdownNotification />}
     </>
   );
 };
